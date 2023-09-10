@@ -219,7 +219,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 			break;
 		case Scene::Stage1GAME:
 
-			DrawBox(0, 0, 1600, 900, GetColor(0, 0, 255), true);
+			DrawBox(0, 0, 1600, 900, GetColor(255, 255, 0), true);
 			DrawFormatString(0, 200, GetColor(255, 0, 0), "scene;%d ", scene);
 			map_->Draw(block,goal);
 			player_->Draw();
@@ -247,7 +247,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 			break;
 		case Scene::Stage2GAME:
 
-			DrawBox(0, 0, 1600, 900, GetColor(255, 0, 255), true);
+			DrawBox(0, 0, 1600, 900, GetColor(255, 255, 0), true);
 			DrawFormatString(0, 200, GetColor(255, 255, 255), " ステージ２");
 			map_->Draw(block, goal);
 			player_->Draw();
@@ -260,7 +260,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 			break;
 
 		case Scene::Stage2GAME2:
-			DrawBox(0, 0, 1600, 900, GetColor(255, 0, 0), true);
+			DrawBox(0, 0, 1600, 900, GetColor(255, 255, 0), true);
 			DrawFormatString(0, 200, GetColor(255, 255, 255), " ステージ２");
 			//関数飛び出し
 			map_->Draw(block, goal);
