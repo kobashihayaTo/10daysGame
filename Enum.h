@@ -14,5 +14,6 @@ enum mapInfo {
 	NONE,	//0
 	BLOCK,	//1
 	GOAL,    //2
-	KUSO//3
+	KUSO,  //3
+	WALL//4
 };

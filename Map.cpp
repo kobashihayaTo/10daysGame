@@ -376,6 +376,12 @@ void Map::Update(Player* player)
 				PlayerTransX -= PlayerMove;
 				player->SetPlayerTransX(PlayerTransX);
 			}
+			if (map[rightTopY][rightTopX] == WALL && map[rightBottomY][rightBottomX] == WALL)
+			{
+				isHit = 3;
+				PlayerTransX -= PlayerMove;
+				player->SetPlayerTransX(PlayerTransX);
+			}
 			//¶
 			leftTopX = (PlayerTransX - 1 - PlayerRadius) / BLOCK_SIZE;
 			leftBottomX = (PlayerTransX - 1 - PlayerRadius) / BLOCK_SIZE;
@@ -385,7 +391,12 @@ void Map::Update(Player* player)
 				PlayerTransX += PlayerMove;
 				player->SetPlayerTransX(PlayerTransX);
 			}
-
+			if (map[leftTopY][leftTopX] == WALL && map[leftBottomY][leftBottomX] == WALL)
+			{
+				isHit = 4;
+				PlayerTransX += PlayerMove;
+				player->SetPlayerTransX(PlayerTransX);
+			}
 
 
 			if (map[leftTopY][leftTopX] == GOAL && map[rightTopY][rightTopX] == GOAL ||
@@ -436,6 +447,9 @@ void Map::Draw(int block, int goal)
 			}
 			if (map[Y][X] == GOAL) {
 				DrawGraph(X * BLOCK_SIZE, Y * BLOCK_SIZE, goal, true);
+			}
+			if (map[Y][X] == WALL) {
+				DrawGraph(X * BLOCK_SIZE, Y * BLOCK_SIZE, block, true);
 			}
 		}
 	}
