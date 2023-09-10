@@ -11,12 +11,10 @@ void Player::Initialize()
 void Player::Update(char* keys, char* oldkeys)
 {
 	int key = GetJoypadInputState(DX_INPUT_KEY_PAD1);
-	if (keys[KEY_INPUT_RIGHT] == 1 || key & PAD_INPUT_RIGHT)
-	{
+	if (keys[KEY_INPUT_RIGHT] == 1 || key & PAD_INPUT_RIGHT) {
 		PlayerTransX += move;
 	}
-	if (keys[KEY_INPUT_LEFT] == 1 || key & PAD_INPUT_LEFT)
-	{
+	if (keys[KEY_INPUT_LEFT] == 1 || key & PAD_INPUT_LEFT) {
 		PlayerTransX -= move;
 	}
 	Jamp(keys, oldkeys);
@@ -35,38 +33,16 @@ void Player::Jamp(char* keys, char* oldkeys)
 {
 	int key = GetJoypadInputState(DX_INPUT_KEY_PAD1);
 
-	//if (jflag == true) {
-	//	y_temp = PlayerTransY;
-	//	PlayerTransY += (PlayerTransY - y_prev) + 1;
-	//	y_prev = y_temp;
-	//	//‚Ì‚¿‚É•ÏX----
-	//	if (PlayerTransY >= 800) {
-	//		jflag = false;
-	//	}
-	//	//--------------
-	//}
-	//if (keys[KEY_INPUT_UP] && jflag == false || key & PAD_INPUT_2 && jflag == false)
-	//{
-	//	jflag = true;
-	//	y_prev = PlayerTransY;
-	//	PlayerTransY = PlayerTransY - jampChange;
-	//}
-
 	if (JumpFlag == 1) {
 		JumpSpeed = JumpSpeed + 0.5f;
 	}
-
-	if (keys[KEY_INPUT_UP] && jflag == false || key & PAD_INPUT_2 && jflag == false)
-	{
-		if (JumpFlag == 0)
-		{
+	if (keys[KEY_INPUT_UP] && JumpFlag == false || key & PAD_INPUT_2 && JumpFlag == false) {
+		if (JumpFlag == 0) {
 			JumpFlag = 1;
 			JumpSpeed = -11;
 		}
 	}
-
-	if (PlayerTransY >= 847)
-	{
+	if (PlayerTransY >= 847) {
 		PlayerTransY = 847;
 	}
 

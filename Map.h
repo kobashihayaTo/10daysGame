@@ -23,19 +23,31 @@ class Map
 	};
 
 public:
+	/// <summary>
+	/// 初期化
+	/// </summary>
 	void Initialize();
+
+	/// <summary>
+	/// 更新
+	/// </summary>
+	/// <param name="player"> プレイヤー </param>
 	void Update(Player* player);
+
+	/// <summary>
+	/// 描画
+	/// </summary>
+	/// <param name="block"></param>
+	/// <param name="goal"></param>
 	void Draw(int block, int goal);//ここでmainブロック画像をもってきてる
 
 	void AllReset();
 	void Reset();
 
-	int BLOCK_SIZE = 32;
-
 	// マップのデータ
 	MAPDATA MapData[MAP_NUM] =
 	{
-		//ステージ１
+		// ステージ１
 		{
 			50,
 			28,
@@ -157,9 +169,8 @@ public:
 	int GetTimer_keep2() { return Timer_keep2; }
 
 private:
+	// プレイヤー --------------------
 	Player* player = nullptr;
-
-	//プレイヤー--------------------
 	int rightTopX;
 	int rightTopY;
 
@@ -182,14 +193,15 @@ private:
 	int OldJumpFlag;
 	//----------------------------
 
-	//マップデータ
+	// マップデータ
 	int MAP_DATA;
+	int BLOCK_SIZE = 32;
 	// 現在のマップ番号
 	int MapNo = 0;
 	int MapDrawPointX, MapDrawPointY;     // 描画するマップ座標値
 	int DrawMapChipNumX, DrawMapChipNumY; // 描画するマップチップの数
 
-	//タイマー-----------------
+	// タイマー -----------------
 	int Timer_GAME = 0;
 	int Timer_GAME2 = 0;
 	int Timer_keep = 0;

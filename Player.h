@@ -5,24 +5,22 @@ class Player
 {
 public:
 	///<summary>
-	///初期化
+	/// 初期化
 	///</summary>
-	///<param name="model">モデル</param>
-	///<param name="textureHandle">テクスチャハンドル</param>
 	void Initialize();
 
 	///<summary>
-	///更新
+	/// 更新
 	///</summary>
 	void Update(char* keys, char* oldkeys);
 
 	///<summary>
-	///描画
+	/// 描画
 	///</summary>
 	void Draw();
 
 	///<summary>
-	///ジャンプ
+	/// ジャンプ
 	///</summary>
 	void Jamp(char* keys, char* oldkeys);
 
@@ -30,7 +28,6 @@ public:
 	float GetPlayerTransY() { return PlayerTransY; }
 	float GetPlayerRadius() { return Playerradius; }
 	float GetPlayerMove() { return move; }
-
 	float GetJumpSpeed() { return JumpSpeed; }
 	int GetJumpFlag() { return JumpFlag; }
 
@@ -42,26 +39,13 @@ public:
 
 private:
 
-	//プレイヤー-----------
+	// プレイヤー -----------
 	float PlayerTransX = 100;
 	float PlayerTransY = 800;
-
 	float Playerradius = 16.0f;
 	float move = 6.0f;
 
-
-	//--------------------
-
-	//ジャンプ---------------------
-	bool jflag = false;
-	float y_temp = 0;
-	float y_prev = 0;
-	int jampChange = 25;
-
-	bool dflag = false;
-
+	// ジャンプ -------------
 	float JumpSpeed = 1;
 	int JumpFlag;
-	//----------------------------
 };
-
