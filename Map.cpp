@@ -51,14 +51,14 @@ void Map::Update(Player* player)
 	rightBottomX = (PlayerTransX + PlayerRadius - 1) / BLOCK_SIZE;
 	rightBottomY = (PlayerTransY + PlayerRadius - 1) / BLOCK_SIZE;
 
-	//行
-	for (int Y = 0; Y <= maprows; Y++) {
-		//行の要素(列)
-		for (int X = 0; X <= mapcois; X++) {
+	for (int Y = -1; Y < DrawMapChipNumY; Y++)
+	{
+		for (int X = -1; X < DrawMapChipNumX; X++)
+		{
 
-			if (map[Y][X] == NONE) {
+			if (MapData[MapNo].Data[Y][X] == NONE) {
 
-				if (map[rightBottomY][rightBottomX] == NONE && map[leftBottomY][leftBottomX] == NONE)
+				if (MapData[MapNo].Data[rightBottomY][rightBottomX] == NONE && MapData[MapNo].Data[leftBottomY][leftBottomX] == NONE)
 				{
 					JumpFlag = 1;
 					player->SetJumpFlag(JumpFlag);
@@ -69,7 +69,7 @@ void Map::Update(Player* player)
 				leftTopY = (PlayerTransY - 1 - PlayerRadius) / BLOCK_SIZE;
 				rightTopY = (PlayerTransY - 1 - PlayerRadius) / BLOCK_SIZE;
 				//両端
-				if (map[leftTopY][leftTopX] == BLOCK && map[rightTopY][rightTopX] == BLOCK)
+				if (MapData[MapNo].Data[leftTopY][leftTopX] == BLOCK && MapData[MapNo].Data[rightTopY][rightTopX] == BLOCK)
 				{
 					isHit = 1;
 
@@ -80,7 +80,7 @@ void Map::Update(Player* player)
 					player->SetPlayerTransY(PlayerTransY);
 				}
 				//右だけ
-				else if (map[leftTopY][leftTopX] == NONE && map[rightTopY][rightTopX] == BLOCK)
+				else if (MapData[MapNo].Data[leftTopY][leftTopX] == NONE && MapData[MapNo].Data[rightTopY][rightTopX] == BLOCK)
 				{
 					isHit = 1;
 
@@ -90,7 +90,7 @@ void Map::Update(Player* player)
 					player->SetPlayerTransY(PlayerTransY);
 				}
 				//左だけ
-				else if (map[leftTopY][leftTopX] == BLOCK && map[rightTopY][rightTopX] == NONE)
+				else if (MapData[MapNo].Data[leftTopY][leftTopX] == BLOCK && MapData[MapNo].Data[rightTopY][rightTopX] == NONE)
 				{
 					isHit = 1;
 
@@ -100,14 +100,14 @@ void Map::Update(Player* player)
 					player->SetPlayerTransY(PlayerTransY);
 				}
 				//左側から当たったとき
-				if (map[leftBottomY][leftBottomX] == BLOCK && map[leftTopY][leftTopX] == BLOCK)
+				if (MapData[MapNo].Data[leftBottomY][leftBottomX] == BLOCK && MapData[MapNo].Data[leftTopY][leftTopX] == BLOCK)
 				{
 					PlayerTransX -= 1;
 					player->SetPlayerTransX(PlayerTransX);
 					PlayerTransY += 1;
 					player->SetPlayerTransY(PlayerTransY);
 				}
-				else if (map[leftBottomY][leftBottomX] == NONE && map[leftTopY][leftTopX] == BLOCK)
+				else if (MapData[MapNo].Data[leftBottomY][leftBottomX] == NONE && MapData[MapNo].Data[leftTopY][leftTopX] == BLOCK)
 				{
 					PlayerTransX -= 1;
 					player->SetPlayerTransX(PlayerTransX);
@@ -117,7 +117,7 @@ void Map::Update(Player* player)
 
 				if (player->GetJumpFlag() == 1)
 				{
-					if (map[leftBottomY][leftBottomX] == BLOCK && map[leftTopY][leftTopX] == NONE)
+					if (MapData[MapNo].Data[leftBottomY][leftBottomX] == BLOCK && MapData[MapNo].Data[leftTopY][leftTopX] == NONE)
 					{
 						PlayerTransX -= 1;
 						player->SetPlayerTransX(PlayerTransX);
@@ -127,14 +127,14 @@ void Map::Update(Player* player)
 				}
 				
 				//右側から当たったとき
-				if (map[rightBottomY][rightBottomX] == BLOCK && map[rightTopY][rightTopX] == BLOCK)
+				if (MapData[MapNo].Data[rightBottomY][rightBottomX] == BLOCK && MapData[MapNo].Data[rightTopY][rightTopX] == BLOCK)
 				{
 					PlayerTransX += 1;
 					player->SetPlayerTransX(PlayerTransX);
 					PlayerTransY += 1;
 					player->SetPlayerTransY(PlayerTransY);
 				}
-				else if (map[rightBottomY][rightBottomX] == NONE && map[rightTopY][rightTopX] == BLOCK)
+				else if (MapData[MapNo].Data[rightBottomY][rightBottomX] == NONE && MapData[MapNo].Data[rightTopY][rightTopX] == BLOCK)
 				{
 					PlayerTransX += 1;
 					player->SetPlayerTransX(PlayerTransX);
@@ -144,7 +144,7 @@ void Map::Update(Player* player)
 
 				if (player->GetJumpFlag() == 1 )
 				{
-					if (map[rightBottomY][rightBottomX] == BLOCK && map[rightTopY][rightTopX] == NONE)
+					if (MapData[MapNo].Data[rightBottomY][rightBottomX] == BLOCK && MapData[MapNo].Data[rightTopY][rightTopX] == NONE)
 					{
 						PlayerTransX += 1;
 						player->SetPlayerTransX(PlayerTransX);
@@ -158,23 +158,23 @@ void Map::Update(Player* player)
 				rightBottomY = (PlayerTransY + 1 + PlayerRadius) / BLOCK_SIZE;
 				leftBottomY = (PlayerTransY + 1 + PlayerRadius) / BLOCK_SIZE;
 				/**ジャンプ後の着地**/
-				if (map[leftBottomY][leftBottomX] == BLOCK) {
+				if (MapData[MapNo].Data[leftBottomY][leftBottomX] == BLOCK) {
 					// 両端
-					if (map[leftBottomY][leftBottomX] == BLOCK && map[rightBottomY][rightBottomX] == BLOCK) {
+					if (MapData[MapNo].Data[leftBottomY][leftBottomX] == BLOCK && MapData[MapNo].Data[rightBottomY][rightBottomX] == BLOCK) {
 						JumpFlag = 0;
 						JumpSpeed = 0;
 						player->SetJumpFlag(JumpFlag);
 						player->SetJumpSpeed(JumpSpeed);
 					}
 					// 右下
-					else if (map[leftBottomY][leftBottomX] == NONE && map[rightBottomY][rightBottomX] == BLOCK) {
+					else if (MapData[MapNo].Data[leftBottomY][leftBottomX] == NONE && MapData[MapNo].Data[rightBottomY][rightBottomX] == BLOCK) {
 						JumpFlag = 0;
 						JumpSpeed = 0;
 						player->SetJumpFlag(JumpFlag);
 						player->SetJumpSpeed(JumpSpeed);
 					}
 					// 左下
-					else if (map[leftBottomY][leftBottomX] == BLOCK && map[rightBottomY][rightBottomX] == NONE) {
+					else if (MapData[MapNo].Data[leftBottomY][leftBottomX] == BLOCK && MapData[MapNo].Data[rightBottomY][rightBottomX] == NONE) {
 						JumpFlag = 0;
 						JumpSpeed = 0;
 						player->SetJumpFlag(JumpFlag);
@@ -182,20 +182,20 @@ void Map::Update(Player* player)
 					}
 				}
 
-				if (map[rightBottomY][rightBottomX] == BLOCK) {
-					if (map[leftBottomY][leftBottomX] == BLOCK && map[rightBottomY][rightBottomX] == BLOCK) {
+				if (MapData[MapNo].Data[rightBottomY][rightBottomX] == BLOCK) {
+					if (MapData[MapNo].Data[leftBottomY][leftBottomX] == BLOCK && MapData[MapNo].Data[rightBottomY][rightBottomX] == BLOCK) {
 						JumpFlag = 0;
 						JumpSpeed = 0;
 						player->SetJumpFlag(JumpFlag);
 						player->SetJumpSpeed(JumpSpeed);
 					}
-					else if (map[leftBottomY][leftBottomX] == NONE && map[rightBottomY][rightBottomX] == BLOCK) {
+					else if (MapData[MapNo].Data[leftBottomY][leftBottomX] == NONE && MapData[MapNo].Data[rightBottomY][rightBottomX] == BLOCK) {
 						JumpFlag = 0;
 						JumpSpeed = 0;
 						player->SetJumpFlag(JumpFlag);
 						player->SetJumpSpeed(JumpSpeed);
 					}
-					else if (map[leftBottomY][leftBottomX] == BLOCK && map[rightBottomY][rightBottomX] == NONE) {
+					else if (MapData[MapNo].Data[leftBottomY][leftBottomX] == BLOCK && MapData[MapNo].Data[rightBottomY][rightBottomX] == NONE) {
 						JumpFlag = 0;
 						JumpSpeed = 0;
 						player->SetJumpFlag(JumpFlag);
@@ -210,7 +210,7 @@ void Map::Update(Player* player)
 		//右
 				rightTopX = (PlayerTransX + 1 + PlayerRadius) / BLOCK_SIZE;
 				rightBottomX = (PlayerTransX + 1 + PlayerRadius) / BLOCK_SIZE;
-				if (map[rightTopY][rightTopX] == BLOCK && map[rightBottomY][rightBottomX] == BLOCK)
+				if (MapData[MapNo].Data[rightTopY][rightTopX] == BLOCK && MapData[MapNo].Data[rightBottomY][rightBottomX] == BLOCK)
 				{
 					isHit = 3;
 					PlayerTransX -= PlayerMove;
@@ -219,164 +219,23 @@ void Map::Update(Player* player)
 				//左
 				leftTopX = (PlayerTransX - 1 - PlayerRadius) / BLOCK_SIZE;
 				leftBottomX = (PlayerTransX - 1 - PlayerRadius) / BLOCK_SIZE;
-				if (map[leftTopY][leftTopX] == BLOCK && map[leftBottomY][leftBottomX] == BLOCK)
+				if (MapData[MapNo].Data[leftTopY][leftTopX] == BLOCK && MapData[MapNo].Data[leftBottomY][leftBottomX] == BLOCK)
 				{
 					isHit = 4;
 					PlayerTransX += PlayerMove;
 					player->SetPlayerTransX(PlayerTransX);
 				}
 			}
-
-
-
-			//上
-
-			//leftTopY = (PlayerTransY - 1 - PlayerRadius) / BLOCK_SIZE;
-			//rightTopY = (PlayerTransY - 1 - PlayerRadius) / BLOCK_SIZE;
-			////両端
-			//if (map[leftTopY][leftTopX] == KUSO && map[rightTopY][rightTopX] == KUSO)
-			//{
-			//	isHit = 1;
-
-			//	PlayerTransY += 1;
-			//	player->SetPlayerTransY(PlayerTransY);
-			//}
-			////右だけ
-			//else if (map[leftTopY][leftTopX] == NONE && map[rightTopY][rightTopX] == KUSO)
-			//{
-			//	isHit = 1;
-
-			//	/*JumpFlag = 0;
-			//	player->SetJumpFlag(JumpFlag);*/
-			//	PlayerTransY += 1;
-			//	player->SetPlayerTransY(PlayerTransY);
-			//}
-			////左だけ
-			//else if (map[leftTopY][leftTopX] == KUSO && map[rightTopY][rightTopX] == NONE)
-			//{
-			//	isHit = 1;
-
-			//	/*JumpFlag = 0;
-			//	player->SetJumpFlag(JumpFlag);*/
-			//	PlayerTransY += 1;
-			//	player->SetPlayerTransY(PlayerTransY);
-			//}
-			////左側から当たったとき
-			//if (map[leftBottomY][leftBottomX] == KUSO && map[leftTopY][leftTopX] == KUSO)
-			//{
-			//	PlayerTransX -= 1;
-			//	player->SetPlayerTransX(PlayerTransX);
-			//	PlayerTransY += 1;
-			//	player->SetPlayerTransY(PlayerTransY);
-			//}
-			//else if (map[leftBottomY][leftBottomX] == NONE && map[leftTopY][leftTopX] == KUSO)
-			//{
-			//	PlayerTransX -= 1;
-			//	player->SetPlayerTransX(PlayerTransX);
-			//	PlayerTransY += 1;
-			//	player->SetPlayerTransY(PlayerTransY);
-			//}
-
-			//if (player->GetJumpFlag() == 1)
-			//{
-			//	if (map[leftBottomY][leftBottomX] == KUSO && map[leftTopY][leftTopX] == NONE)
-			//	{
-			//		PlayerTransX -= 1;
-			//		player->SetPlayerTransX(PlayerTransX);
-			//		PlayerTransY += 1;
-			//		player->SetPlayerTransY(PlayerTransY);
-			//	}
-			//}
-
-			////右側から当たったとき
-			//if (map[rightBottomY][rightBottomX] == KUSO && map[rightTopY][rightTopX] == KUSO)
-			//{
-			//	PlayerTransX += 1;
-			//	player->SetPlayerTransX(PlayerTransX);
-			//	PlayerTransY += 1;
-			//	player->SetPlayerTransY(PlayerTransY);
-			//}
-			//else if (map[rightBottomY][rightBottomX] == NONE && map[rightTopY][rightTopX] == KUSO)
-			//{
-			//	PlayerTransX += 1;
-			//	player->SetPlayerTransX(PlayerTransX);
-			//	PlayerTransY += 1;
-			//	player->SetPlayerTransY(PlayerTransY);
-			//}
-
-			//if (player->GetJumpFlag() == 1)
-			//{
-			//	if (map[rightBottomY][rightBottomX] == KUSO && map[rightTopY][rightTopX] == NONE)
-			//	{
-			//		PlayerTransX += 1;
-			//		player->SetPlayerTransX(PlayerTransX);
-			//		PlayerTransY += 1;
-			//		player->SetPlayerTransY(PlayerTransY);
-			//	}
-			//}
-
-			//下
-
-			//rightBottomY = (PlayerTransY + 1 + PlayerRadius) / BLOCK_SIZE;
-			//leftBottomY = (PlayerTransY + 1 + PlayerRadius) / BLOCK_SIZE;
-			///**ジャンプ後の着地**/
-			//if (map[leftBottomY][leftBottomX] == KUSO) {
-			//	 両端
-			//	if (map[leftBottomY][leftBottomX] == KUSO && map[rightBottomY][rightBottomX] == KUSO) {
-			//		JumpFlag = 0;
-			//		JumpSpeed = 0;
-			//		player->SetJumpFlag(JumpFlag);
-			//		player->SetJumpSpeed(JumpSpeed);
-			//	}
-			//	 右下
-			//	else if (map[leftBottomY][leftBottomX] == NONE && map[rightBottomY][rightBottomX] == KUSO) {
-			//		JumpFlag = 0;
-			//		JumpSpeed = 0;
-			//		player->SetJumpFlag(JumpFlag);
-			//		player->SetJumpSpeed(JumpSpeed);
-			//	}
-			//	 左下
-			//	else if (map[leftBottomY][leftBottomX] == KUSO && map[rightBottomY][rightBottomX] == NONE) {
-			//		JumpFlag = 0;
-			//		JumpSpeed = 0;
-			//		player->SetJumpFlag(JumpFlag);
-			//		player->SetJumpSpeed(JumpSpeed);
-			//	}
-			//}
-
-			//if (map[rightBottomY][rightBottomX] == KUSO) {
-			//	if (map[leftBottomY][leftBottomX] == KUSO && map[rightBottomY][rightBottomX] == KUSO) {
-			//		JumpFlag = 0;
-			//		JumpSpeed = 0;
-			//		player->SetJumpFlag(JumpFlag);
-			//		player->SetJumpSpeed(JumpSpeed);
-			//	}
-			//	else if (map[leftBottomY][leftBottomX] == NONE && map[rightBottomY][rightBottomX] == KUSO) {
-			//		JumpFlag = 0;
-			//		JumpSpeed = 0;
-			//		player->SetJumpFlag(JumpFlag);
-			//		player->SetJumpSpeed(JumpSpeed);
-			//	}
-			//	else if (map[leftBottomY][leftBottomX] == KUSO && map[rightBottomY][rightBottomX] == NONE) {
-			//		JumpFlag = 0;
-			//		JumpSpeed = 0;
-			//		player->SetJumpFlag(JumpFlag);
-			//		player->SetJumpSpeed(JumpSpeed);
-			//	}
-			//}
-
-			/**/
-
 			//右
 			rightTopX = (PlayerTransX + 1 + PlayerRadius) / BLOCK_SIZE;
 			rightBottomX = (PlayerTransX + 1 + PlayerRadius) / BLOCK_SIZE;
-			if (map[rightTopY][rightTopX] == KUSO && map[rightBottomY][rightBottomX] == KUSO)
+			if (MapData[MapNo].Data[rightTopY][rightTopX] == KUSO && MapData[MapNo].Data[rightBottomY][rightBottomX] == KUSO)
 			{
 				isHit = 3;
 				PlayerTransX -= PlayerMove;
 				player->SetPlayerTransX(PlayerTransX);
 			}
-			if (map[rightTopY][rightTopX] == WALL && map[rightBottomY][rightBottomX] == WALL)
+			if (MapData[MapNo].Data[rightTopY][rightTopX] == WALL && MapData[MapNo].Data[rightBottomY][rightBottomX] == WALL)
 			{
 				isHit = 3;
 				PlayerTransX -= PlayerMove;
@@ -385,13 +244,13 @@ void Map::Update(Player* player)
 			//左
 			leftTopX = (PlayerTransX - 1 - PlayerRadius) / BLOCK_SIZE;
 			leftBottomX = (PlayerTransX - 1 - PlayerRadius) / BLOCK_SIZE;
-			if (map[leftTopY][leftTopX] == KUSO && map[leftBottomY][leftBottomX] == KUSO)
+			if (MapData[MapNo].Data[leftTopY][leftTopX] == KUSO && MapData[MapNo].Data[leftBottomY][leftBottomX] == KUSO)
 			{
 				isHit = 4;
 				PlayerTransX += PlayerMove;
 				player->SetPlayerTransX(PlayerTransX);
 			}
-			if (map[leftTopY][leftTopX] == WALL && map[leftBottomY][leftBottomX] == WALL)
+			if (MapData[MapNo].Data[leftTopY][leftTopX] == WALL && MapData[MapNo].Data[leftBottomY][leftBottomX] == WALL)
 			{
 				isHit = 4;
 				PlayerTransX += PlayerMove;
@@ -399,10 +258,10 @@ void Map::Update(Player* player)
 			}
 
 
-			if (map[leftTopY][leftTopX] == GOAL && map[rightTopY][rightTopX] == GOAL ||
-				map[rightBottomY][rightBottomX] == GOAL && map[leftBottomY][leftBottomX] == GOAL ||
-				map[rightTopY][rightTopX] == GOAL && map[rightBottomY][rightBottomX] == GOAL ||
-				map[leftTopY][leftTopX] == GOAL && map[leftBottomY][leftBottomX] == GOAL)
+			if (MapData[MapNo].Data[leftTopY][leftTopX] == GOAL && MapData[MapNo].Data[rightTopY][rightTopX] == GOAL ||
+				MapData[MapNo].Data[rightBottomY][rightBottomX] == GOAL && MapData[MapNo].Data[leftBottomY][leftBottomX] == GOAL ||
+				MapData[MapNo].Data[rightTopY][rightTopX] == GOAL && MapData[MapNo].Data[rightBottomY][rightBottomX] == GOAL ||
+				MapData[MapNo].Data[leftTopY][leftTopX] == GOAL && MapData[MapNo].Data[leftBottomY][leftBottomX] == GOAL)
 			{
 				if (TimerFlag == 0)
 				{
@@ -438,17 +297,16 @@ void Map::Update(Player* player)
 
 void Map::Draw(int block, int goal)
 {
-	//行の描画
-	for (int Y = 0; Y <= maprows; Y++) {
-		//行の要素(列)の描画
-		for (int X = 0; X <= mapcois; X++) {
-			if (map[Y][X] == BLOCK) {
+	for (int Y = 0; Y < DrawMapChipNumY; Y++)
+	{
+		for (int X = 0; X < DrawMapChipNumX; X++) {
+			if (MapData[MapNo].Data[Y][X] == BLOCK) {
 				DrawGraph(X * BLOCK_SIZE, Y * BLOCK_SIZE, block, true);
 			}
-			if (map[Y][X] == GOAL) {
+			if (MapData[MapNo].Data[Y][X] == GOAL) {
 				DrawGraph(X * BLOCK_SIZE, Y * BLOCK_SIZE, goal, true);
 			}
-			if (map[Y][X] == WALL) {
+			if (MapData[MapNo].Data[Y][X] == WALL) {
 				DrawGraph(X * BLOCK_SIZE, Y * BLOCK_SIZE, block, true);
 			}
 		}
