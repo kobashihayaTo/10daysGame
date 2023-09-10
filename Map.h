@@ -3,7 +3,7 @@
 #include "Enum.h"
 #include "Player.h"
 
-#define MAP_NUM         3           // マップの数
+#define MAP_NUM         4           // マップの数
 #define MAP_WIDTH_MAX   50          // マップの最大幅
 #define MAP_HEIGHT_MAX  28          // マップの最大縦長さ
 
@@ -148,6 +148,9 @@ public:
 	//ゲッター、セッター置き場
 	int GetTimerFlag() { return TimerFlag; }
 	void SetTimerFlag(int TimerFlag_) { TimerFlag = TimerFlag_; }
+
+	int GetMapNo() { return MapNo; }
+	void SetMapNo(int MapNo_) { MapNo = MapNo_; }
 
 	int GetTimer_() { return Timer; }
 	int GetTimer_keep() { return Timer_keep; }

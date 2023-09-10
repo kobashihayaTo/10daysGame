@@ -97,11 +97,18 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 			if (keys[KEY_INPUT_A] == 1)
 			{
+				map_->SetMapNo(0);
 				scene = Scene::Stage1GAME;
 			}
 			if (keys[KEY_INPUT_S] == 1)
 			{
+				map_->SetMapNo(1);
 				scene = Scene::Stage2GAME;
+			}
+			if (keys[KEY_INPUT_D] == 1)
+			{
+				map_->SetMapNo(2);
+				scene = Scene::Stage3GAME;
 			}
 			break;
 
@@ -109,7 +116,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 			player_->Update(keys, oldkeys);
 			map_->Update(player_);
 
-			if (map_->GetTimer_() >= 5)
+			if (map_->GetTimer_() >= 5000)
 			{
 				scene = Scene::END;
 			}
@@ -146,7 +153,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 			player_->Update(keys, oldkeys);
 			map_->Update(player_);
 
-			if (map_->GetTimer_() >= 5)
+			if (map_->GetTimer_() >= 5000)
 			{
 				scene = Scene::END;
 			}
@@ -162,9 +169,44 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 			}
 			break;
 
-			break;
 		case Scene::Stage2GAME2:
 
+			player_->Update(keys, oldkeys);
+			map_->Update(player_);
+			if (map_->GetTimerFlag() == 4)
+			{
+				if (keys[KEY_INPUT_SPACE] == 1)
+				{
+					scene = Scene::TITLE;
+				}
+			}
+			if (map_->GetTimerFlag() == 5)
+			{
+				scene = Scene::BADEND;
+			}
+			break;
+
+		case Scene::Stage3GAME:
+
+			player_->Update(keys, oldkeys);
+			map_->Update(player_);
+
+			if (map_->GetTimer_() >= 5000)
+			{
+				scene = Scene::END;
+			}
+
+			if (map_->GetTimerFlag() == 1)
+			{
+				if (keys[KEY_INPUT_SPACE] == 1)
+				{
+					scene = Scene::Stage3GAME2;
+					player_->Initialize();
+					map_->SetTimerFlag(2);
+				}
+			}
+			break;
+		case Scene::Stage3GAME2:
 			player_->Update(keys, oldkeys);
 			map_->Update(player_);
 			if (map_->GetTimerFlag() == 4)
@@ -216,6 +258,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 			DrawBox(0, 0, 1600, 900, GetColor(255, 255, 0), true);
 			DrawFormatString(700, 350, GetColor(255, 0, 0), "A押したらステージ１ ");
 			DrawFormatString(700, 400, GetColor(255, 0, 0), "S押したらステージ２ ");
+			DrawFormatString(700, 450, GetColor(255, 0, 0), "D押したらステージ３ ");
 			break;
 		case Scene::Stage1GAME:
 
@@ -274,6 +317,36 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 			}
 			break;
 
+		case Scene::Stage3GAME:
+
+			DrawBox(0, 0, 1600, 900, GetColor(255, 255, 0), true);
+			DrawFormatString(0, 200, GetColor(255, 255, 255), " ステージ3");
+			map_->Draw(block, goal);
+			player_->Draw();
+			if (map_->GetTimerFlag() == 1)
+			{
+				DrawBox(0, 0, 1600, 900, GetColor(0, 255, 255), true);
+				DrawFormatString(700, 450, GetColor(255, 0, 0), "SPACEでへんかするで");
+				DrawFormatString(700, 400, GetColor(255, 0, 0), "Timer_keep;%d ", map_->GetTimer_keep());
+			}
+			break;
+
+		case Scene::Stage3GAME2:
+			DrawBox(0, 0, 1600, 900, GetColor(255, 255, 0), true);
+			DrawFormatString(0, 200, GetColor(255, 255, 255), " ステージ3");
+			//関数飛び出し
+			map_->Draw(block, goal);
+			player_->Draw();
+			if (map_->GetTimerFlag() == 4)
+			{
+				DrawBox(0, 0, 1600, 900, GetColor(0, 255, 255), true);
+				DrawFormatString(700, 450, GetColor(255, 0, 0), "クリア");
+				DrawFormatString(700, 350, GetColor(255, 0, 0), "Timer_keep;%d ", map_->GetTimer_keep());
+				DrawFormatString(700, 400, GetColor(255, 0, 0), "Timer_keep2;%d ", map_->GetTimer_keep2());
+			}
+			break;
+
+
 		case Scene::BADEND:
 			if (map_->GetTimerFlag() == 5)
 			{
@@ -283,13 +356,15 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 				DrawFormatString(700, 400, GetColor(255, 0, 0), "Timer_keep2;%d ", map_->GetTimer_keep2());
 				DrawFormatString(0, 200, GetColor(255, 0, 0), "scene;%d ", scene);
 			}
+			break;
 		case Scene::END:
 			DrawBox(0, 0, 1600, 900, GetColor(0,0, 255), true);
 			DrawFormatString(700, 450, GetColor(255, 0, 0), "時間切れだ");
 			DrawFormatString(700, 350, GetColor(255, 0, 0), "Timer_keep;%d ", map_->GetTimer_keep());
 			DrawFormatString(700, 400, GetColor(255, 0, 0), "Timer_keep2;%d ", map_->GetTimer_keep2());
 			DrawFormatString(0, 200, GetColor(255, 0, 0), "scene;%d ", scene);
-		}
+			break;
+}
 
 
 		//---------  ここまでにプログラムを記述  ---------//
