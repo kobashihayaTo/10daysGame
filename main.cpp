@@ -88,30 +88,43 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 			{
 				if (keys[KEY_INPUT_SPACE] == 1)
 				{
-					scene = Scene::GAME;
+					scene = Scene::MANUAL;
 					IntervalTimer = 0;
 				}
 			} 
 			break;
 		case Scene::MANUAL:
 
+			if (keys[KEY_INPUT_A] == 1)
+			{
+				scene = Scene::Stage1GAME;
+			}
+			if (keys[KEY_INPUT_S] == 1)
+			{
+				scene = Scene::Stage2GAME;
+			}
 			break;
 
-		case Scene::GAME:
+		case Scene::Stage1GAME:
 			player_->Update(keys, oldkeys);
 			map_->Update(player_);
+
+			if (map_->GetTimer_() >= 5)
+			{
+				scene = Scene::END;
+			}
 
 			if (map_->GetTimerFlag() == 1)
 			{
 				if (keys[KEY_INPUT_SPACE] == 1)
 				{
-					scene = Scene::GAME2;
+					scene = Scene::Stage1GAME2;
 					player_->Initialize();
  					map_->SetTimerFlag(2);
 				}
 			}
 			break;
-		case Scene::GAME2:
+		case Scene::Stage1GAME2:
 
 			player_->Update(keys, oldkeys);
 			map_->Update(player_);
@@ -128,18 +141,65 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 			}
 			break;
 
+		case Scene::Stage2GAME:
+
+			player_->Update(keys, oldkeys);
+			map_->Update(player_);
+
+			if (map_->GetTimer_() >= 5)
+			{
+				scene = Scene::END;
+			}
+
+			if (map_->GetTimerFlag() == 1)
+			{
+				if (keys[KEY_INPUT_SPACE] == 1)
+				{
+					scene = Scene::Stage2GAME2;
+					player_->Initialize();
+					map_->SetTimerFlag(2);
+				}
+			}
+			break;
+
+			break;
+		case Scene::Stage2GAME2:
+
+			player_->Update(keys, oldkeys);
+			map_->Update(player_);
+			if (map_->GetTimerFlag() == 4)
+			{
+				if (keys[KEY_INPUT_SPACE] == 1)
+				{
+					scene = Scene::TITLE;
+				}
+			}
+			if (map_->GetTimerFlag() == 5)
+			{
+				scene = Scene::BADEND;
+			}
+			break;
+
+			break;
 		case Scene::BADEND:
 
 			if (map_->GetTimerFlag() == 5)
 			{
 				if (keys[KEY_INPUT_SPACE] == 1)
 				{
-					scene = Scene::GAME2;
+					scene = Scene::Stage1GAME2;
 					player_->Initialize();
 					map_->Reset();
 				}
 			}
 			break;
+		case Scene::END:
+			if (keys[KEY_INPUT_SPACE] == 1)
+			{
+				scene = Scene::Stage1GAME;
+				player_->Initialize();
+				map_->AllReset();
+			}
 		}
 		
 		// 描画処理
@@ -154,8 +214,10 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 			break;
 		case Scene::MANUAL:
 			DrawBox(0, 0, 1600, 900, GetColor(255, 255, 0), true);
+			DrawFormatString(700, 350, GetColor(255, 0, 0), "A押したらステージ１ ");
+			DrawFormatString(700, 400, GetColor(255, 0, 0), "S押したらステージ２ ");
 			break;
-		case Scene::GAME:
+		case Scene::Stage1GAME:
 
 			DrawBox(0, 0, 1600, 900, GetColor(0, 0, 255), true);
 			DrawFormatString(0, 200, GetColor(255, 0, 0), "scene;%d ", scene);
@@ -169,11 +231,39 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 			}
 			break;
 
-		case Scene::GAME2:
+		case Scene::Stage1GAME2:
 			DrawBox(0, 0, 1600, 900, GetColor(255, 255, 0), true);
 			DrawFormatString(0, 200, GetColor(255, 0, 0), "scene;%d ", scene);
 			//関数飛び出し
 			map_->Draw(block,goal);
+			player_->Draw();
+			if (map_->GetTimerFlag() == 4)
+			{
+				DrawBox(0, 0, 1600, 900, GetColor(0, 255, 255), true);
+				DrawFormatString(700, 450, GetColor(255, 0, 0), "クリア");
+				DrawFormatString(700, 350, GetColor(255, 0, 0), "Timer_keep;%d ", map_->GetTimer_keep());
+				DrawFormatString(700, 400, GetColor(255, 0, 0), "Timer_keep2;%d ", map_->GetTimer_keep2());
+			}
+			break;
+		case Scene::Stage2GAME:
+
+			DrawBox(0, 0, 1600, 900, GetColor(255, 0, 255), true);
+			DrawFormatString(0, 200, GetColor(255, 255, 255), " ステージ２");
+			map_->Draw(block, goal);
+			player_->Draw();
+			if (map_->GetTimerFlag() == 1)
+			{
+				DrawBox(0, 0, 1600, 900, GetColor(0, 255, 255), true);
+				DrawFormatString(700, 450, GetColor(255, 0, 0), "SPACEでへんかするで");
+				DrawFormatString(700, 400, GetColor(255, 0, 0), "Timer_keep;%d ", map_->GetTimer_keep());
+			}
+			break;
+
+		case Scene::Stage2GAME2:
+			DrawBox(0, 0, 1600, 900, GetColor(255, 0, 0), true);
+			DrawFormatString(0, 200, GetColor(255, 255, 255), " ステージ２");
+			//関数飛び出し
+			map_->Draw(block, goal);
 			player_->Draw();
 			if (map_->GetTimerFlag() == 4)
 			{
@@ -193,6 +283,12 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 				DrawFormatString(700, 400, GetColor(255, 0, 0), "Timer_keep2;%d ", map_->GetTimer_keep2());
 				DrawFormatString(0, 200, GetColor(255, 0, 0), "scene;%d ", scene);
 			}
+		case Scene::END:
+			DrawBox(0, 0, 1600, 900, GetColor(0,0, 255), true);
+			DrawFormatString(700, 450, GetColor(255, 0, 0), "時間切れだ");
+			DrawFormatString(700, 350, GetColor(255, 0, 0), "Timer_keep;%d ", map_->GetTimer_keep());
+			DrawFormatString(700, 400, GetColor(255, 0, 0), "Timer_keep2;%d ", map_->GetTimer_keep2());
+			DrawFormatString(0, 200, GetColor(255, 0, 0), "scene;%d ", scene);
 		}
 
 

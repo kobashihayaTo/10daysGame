@@ -3,8 +3,16 @@
 enum class Scene {
 	TITLE,//タイトル
 	MANUAL,//マニュアル
-	GAME,//ゲームシーン
-	GAME2,//ゲームシーン2
+	//1ステージ
+	Stage1GAME,//ゲームシーン
+	Stage1GAME2,//ゲームシーン2
+	//2ステージ
+	Stage2GAME,
+	Stage2GAME2,
+	//3ステージ
+	Stage3GAME,
+	Stage3GAME2,
+
 	END,//エンド
 	BADEND//ゲームオーバー
 };
