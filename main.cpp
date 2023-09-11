@@ -55,12 +55,13 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 	int graphHandle[10] = {};
 	int graphHandle_2[10] = {};
-	int graphHandle_[10] = {};
+	int graphHandleResult_[10] = {};
+	int graphHandleResult_2[10] = {};
 
 	int Number = LoadDivGraph("Resources/digits.png", 10, 10, 1, 16, 29, graphHandle);//番号の表示
 	int Number_2 = LoadDivGraph("Resources/digits.png", 10, 10, 1, 16, 29, graphHandle_2);//番号の表示
-	int Number_ = LoadDivGraph("Resources/digits_2.png", 10, 10, 1, 64, 116, graphHandle_);//番号の表示
 
+	int NumberResult_ = LoadDivGraph("Resources/digits_2.png", 10, 10, 1, 64, 116, graphHandleResult_);//番号の表示
 	//BGM
 	int TitleBGM;
 	int Manual;
@@ -400,7 +401,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 				// 関数飛び出し
 				for (int i = 0; i < 3; i++)
 				{
-					DrawGraph(700 + 64 * i, 200, graphHandle_[eachNumber_[i]], true);
+					DrawGraph(700 + 64 * i, 200, graphHandleResult_[eachNumber_[i]], true);
 				}
 
 			}
@@ -471,7 +472,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 				// 関数飛び出し
 				for (int i = 0; i < 3; i++)
 				{
-					DrawGraph(700 + 64 * i, 200, graphHandle_[eachNumber_[i]], true);
+					DrawGraph(700 + 64 * i, 200, graphHandleResult_[eachNumber_[i]], true);
 				}
 			}
 			break;
@@ -480,6 +481,42 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 			DrawBox(0, 0, 1600, 900, GetColor(255, 255, 0), true);
 			DrawFormatString(0, 200, GetColor(255, 255, 255), "ステージ２");
+
+
+			Timer = map_->GetTimer_();
+			printf("百の位:%d", Timer / 100);
+			eachNumber[0] = Timer / 100;
+			Timer = Timer % 100;
+
+			printf("十の位:%d", Timer / 10);
+			eachNumber[1] = Timer / 10;
+			Timer = Timer % 10;
+
+			printf("一の位:%d", Timer);
+			eachNumber[2] = Timer;
+
+			// 関数飛び出し
+			for (int i = 0; i < 3; i++)
+			{
+				DrawGraph(1450 + 16 * i, 60, graphHandle[eachNumber[i]], true);
+			}
+
+			Timer_2 = map_->GetTimer_2();
+			printf("百の位:%d", Timer_2 / 100);
+			eachNumber_2[0] = Timer_2 / 100;
+			Timer_2 = Timer_2 % 100;
+
+			printf("十の位:%d", Timer_2 / 10);
+			eachNumber_2[1] = Timer_2 / 10;
+			Timer_2 = Timer_2 % 10;
+
+			printf("一の位:%d", Timer_2);
+			eachNumber_2[2] = Timer_2;
+
+			for (int j = 0; j < 3; j++)
+			{
+				DrawGraph(1350 + 16 * j, 60, graphHandle_2[eachNumber_2[j]], true);
+			}
 			// 関数飛び出し
 			map_->Draw(block, goal);
 			player_->Draw();
@@ -507,7 +544,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 				// 関数飛び出し
 				for (int i = 0; i < 3; i++)
 				{
-					DrawGraph(700 + 64 * i, 200, graphHandle_[eachNumber_[i]], true);
+					DrawGraph(700 + 64 * i, 200, graphHandleResult_[eachNumber_[i]], true);
 				}
 			}
 			break;
@@ -516,6 +553,42 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 			DrawBox(0, 0, 1600, 900, GetColor(255, 255, 0), true);
 			DrawFormatString(0, 200, GetColor(255, 255, 255), "ステージ3");
+
+
+			Timer = map_->GetTimer_();
+			printf("百の位:%d", Timer / 100);
+			eachNumber[0] = Timer / 100;
+			Timer = Timer % 100;
+
+			printf("十の位:%d", Timer / 10);
+			eachNumber[1] = Timer / 10;
+			Timer = Timer % 10;
+
+			printf("一の位:%d", Timer);
+			eachNumber[2] = Timer;
+
+			// 関数飛び出し
+			for (int i = 0; i < 3; i++)
+			{
+				DrawGraph(1450 + 16 * i, 60, graphHandle[eachNumber[i]], true);
+			}
+
+			Timer_2 = map_->GetTimer_2();
+			printf("百の位:%d", Timer_2 / 100);
+			eachNumber_2[0] = Timer_2 / 100;
+			Timer_2 = Timer_2 % 100;
+
+			printf("十の位:%d", Timer_2 / 10);
+			eachNumber_2[1] = Timer_2 / 10;
+			Timer_2 = Timer_2 % 10;
+
+			printf("一の位:%d", Timer_2);
+			eachNumber_2[2] = Timer_2;
+
+			for (int j = 0; j < 3; j++)
+			{
+				DrawGraph(1350 + 16 * j, 60, graphHandle_2[eachNumber_2[j]], true);
+			}
 			// 関数飛び出し
 			map_->Draw(block, goal);
 			player_->Draw();
@@ -526,9 +599,41 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 			if (map_->GetTimerFlag() == 5) {
 				DrawBox(0, 0, 1600, 900, GetColor(0, 255, 255), true);
 				DrawFormatString(700, 450, GetColor(255, 0, 0), "もう一回やってみよう");
-				DrawFormatString(700, 350, GetColor(255, 0, 0), "Timer_keep;%d ", map_->GetTimer_keep());
-				DrawFormatString(700, 400, GetColor(255, 0, 0), "Timer_keep2;%d ", map_->GetTimer_keep2());
-				DrawFormatString(0, 200, GetColor(255, 0, 0), "scene;%d ", scene);
+
+				Timer = map_->GetTimer_();
+				printf("百の位:%d", Timer / 100);
+				eachNumber[0] = Timer / 100;
+				Timer = Timer % 100;
+
+				printf("十の位:%d", Timer / 10);
+				eachNumber[1] = Timer / 10;
+				Timer = Timer % 10;
+
+				printf("一の位:%d", Timer);
+				eachNumber[2] = Timer;
+
+				// 関数飛び出し
+				for (int i = 0; i < 3; i++)
+				{
+					DrawGraph(700 + 64 * i, 100, graphHandleResult_[eachNumber_[i]], true);
+				}
+
+				Timer_2 = map_->GetTimer_2();
+				printf("百の位:%d", Timer_2 / 100);
+				eachNumber_2[0] = Timer_2 / 100;
+				Timer_2 = Timer_2 % 100;
+
+				printf("十の位:%d", Timer_2 / 10);
+				eachNumber_2[1] = Timer_2 / 10;
+				Timer_2 = Timer_2 % 10;
+
+				printf("一の位:%d", Timer_2);
+				eachNumber_2[2] = Timer_2;
+
+				for (int j = 0; j < 3; j++)
+				{
+					DrawGraph(700 + 64 * j, 250, graphHandleResult_[eachNumber_2[j]], true);
+				}
 			}
 			break;
 
