@@ -165,6 +165,7 @@ public:
 	void SetMapNo(int MapNo_) { MapNo = MapNo_; }
 
 	int GetTimer_() { return Timer; }
+	int GetTimer_2() { return Timer_2; }
 	int GetTimer_keep() { return Timer_keep; }
 	int GetTimer_keep2() { return Timer_keep2; }
 

@@ -2,6 +2,7 @@
 #include "Enum.h"
 #include "Player.h"
 #include "Map.h"
+#include "UI.h"
 
 // ウィンドウのタイトルに表示する文字列
 const char TITLE[] = "タイトル";
@@ -39,9 +40,23 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	// (ダブルバッファ)描画先グラフィック領域は裏面を指定
 	SetDrawScreen(DX_SCREEN_BACK);
 
-	// 画像などのリソースデータの変数宣言と読み込み
+	// 画像などのリソースデータの変数宣言と読み込
+	//タイトル
+	int Title= LoadGraph("Resources/title.png");
+	int Title_start01= LoadGraph("Resources/title_start01.png");
+	int Title_start02 = LoadGraph("Resources/title_start02.png");
+	//クリア
+	int Clear = LoadGraph("Resources/clear.png");
+	int Clear_start01 = LoadGraph("Resources/clear_title01.png");
+	int Clear_start02 = LoadGraph("Resources/clear_title02.png");
+
 	int block = LoadGraph("Resources/map.png");//マップチップの1に表示される
 	int goal = LoadGraph("Resources/E.png");//マップチップの1に表示される
+	int graphHandle[10] = {};
+	int graphHandle_2[10] = {};
+	int Number = LoadDivGraph("Resources/digits.png",10,10,1,16,29, graphHandle);//番号の表示
+	int Number_2 = LoadDivGraph("Resources/digits.png", 10, 10, 1, 16, 29, graphHandle_2);//番号の表示
+
 
 	// ゲームループで使う変数の宣言
 	// タイトル
@@ -52,9 +67,20 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	// マップ
 	Map* map_ = new Map();
 	map_->Initialize();
+	//UI
+	UI* ui_ = new UI();
+	ui_->Initialize();
 
 	// 変数
+	//タイトルで使う
 	int IntervalTimer = 0;
+	int BlinkingTimer = 0;
+
+	int eachNumber[10] = {};
+	int eachNumber_2[10] = {};
+
+	int Timer = 000000;
+	int Timer_2 = 000000;
 
 	// 最新のキーボード情報用
 	char keys[256] = { 0 };
@@ -87,8 +113,9 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 			if (IntervalTimer >= 30) {
 				if (keys[KEY_INPUT_SPACE] == 1) {
-					scene = Scene::MANUAL;
+					scene = Scene::CLEAR;
 					IntervalTimer = 0;
+					BlinkingTimer = 0;
 				}
 			}
 			break;
@@ -113,6 +140,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 			player_->Update(keys, oldkeys);
 			map_->Update(player_);
+			
 
 			if (map_->GetTimer_() >= 5000) {
 				scene = Scene::END;
@@ -128,13 +156,11 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 			break;
 
 		case Scene::Stage1GAME2:
-
+			
 			player_->Update(keys, oldkeys);
 			map_->Update(player_);
 			if (map_->GetTimerFlag() == 4) {
-				if (keys[KEY_INPUT_SPACE] == 1) {
-					scene = Scene::TITLE;
-				}
+				scene = Scene::CLEAR;
 			}
 			if (map_->GetTimerFlag() == 5) {
 				scene = Scene::BADEND;
@@ -162,9 +188,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 			player_->Update(keys, oldkeys);
 			map_->Update(player_);
 			if (map_->GetTimerFlag() == 4) {
-				if (keys[KEY_INPUT_SPACE] == 1) {
-					scene = Scene::TITLE;
-				}
+				scene = Scene::CLEAR;
 			}
 			if (map_->GetTimerFlag() == 5) {
 				scene = Scene::BADEND;
@@ -193,9 +217,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 			player_->Update(keys, oldkeys);
 			map_->Update(player_);
 			if (map_->GetTimerFlag() == 4) {
-				if (keys[KEY_INPUT_SPACE] == 1) {
-					scene = Scene::TITLE;
-				}
+				scene = Scene::CLEAR;
 			}
 			if (map_->GetTimerFlag() == 5) {
 				scene = Scene::BADEND;
@@ -221,6 +243,12 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 				map_->AllReset();
 			}
 			break;
+		case Scene::CLEAR:
+
+			if (keys[KEY_INPUT_A] == 1) {
+				scene = Scene::TITLE;
+			}
+			break;
 		}
 
 		// 描画処理
@@ -228,9 +256,21 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		{
 		case Scene::TITLE:
 
-			DrawBox(0, 0, 1600, 900, GetColor(255, 255, 255), true);
-			DrawFormatString(700, 450, GetColor(255, 0, 0), "SPACEでへんかするで");
-			DrawFormatString(0, 200, GetColor(255, 0, 0), "scene;%d ", scene);
+			BlinkingTimer++;
+
+			DrawBox(0, 0, 1600, 900, GetColor(255, 0, 0), true);
+			DrawGraph(0, 0, Title_start01, true);
+			if (BlinkingTimer <= 30)
+			{
+				DrawGraph(0, 0, Title_start02, true);
+
+			}
+			if (BlinkingTimer >= 60)
+			{
+				BlinkingTimer = 0;
+			}
+
+			DrawGraph(0, 0, Title, true);
 			break;
 
 		case Scene::MANUAL:
@@ -243,11 +283,32 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 		case Scene::Stage1GAME:
 
-			DrawBox(0, 0, 1600, 900, GetColor(255, 255, 0), true);
+			//DrawBox(0, 0, 1600, 900, GetColor(255, 255, 0), true);
 			DrawFormatString(0, 200, GetColor(255, 0, 0), "scene;%d ", scene);
+			
+			//タイマーの描画
+			Timer = map_->GetTimer_();
+
+			printf("百の位:%d", Timer / 100);
+			eachNumber[0] = Timer / 100;
+			Timer = Timer % 100;
+
+			printf("十の位:%d",Timer / 10);
+			eachNumber[1] = Timer / 10;
+			Timer = Timer % 10;
+
+			printf("一の位:%d", Timer);
+			eachNumber[2] = Timer;
+			
+
 			// 関数飛び出し
 			map_->Draw(block, goal);
 			player_->Draw();
+			for (int i = 0; i < 3; i++)
+			{
+				DrawGraph(1450+16*i, 60, graphHandle[eachNumber[i]], true);
+			}
+
 			if (map_->GetTimerFlag() == 1) {
 				DrawBox(0, 0, 1600, 900, GetColor(0, 255, 255), true);
 				DrawFormatString(700, 450, GetColor(255, 0, 0), "SPACEでへんかするで");
@@ -256,18 +317,54 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 			break;
 
 		case Scene::Stage1GAME2:
-
-			DrawBox(0, 0, 1600, 900, GetColor(255, 255, 0), true);
+			//DrawBox(0, 0, 1600, 900, GetColor(255, 255, 0), true);
 			DrawFormatString(0, 200, GetColor(255, 0, 0), "scene;%d ", scene);
+
+			Timer = map_->GetTimer_();
+			printf("百の位:%d", Timer / 100);
+			eachNumber[0] = Timer / 100;
+			Timer = Timer % 100;
+
+			printf("十の位:%d", Timer / 10);
+			eachNumber[1] = Timer / 10;
+			Timer = Timer % 10;
+
+			printf("一の位:%d", Timer);
+			eachNumber[2] = Timer;
+
+			// 関数飛び出し
+			for (int i = 0; i < 3; i++)
+			{
+				DrawGraph(1450 + 16 * i, 60, graphHandle[eachNumber[i]], true);
+			}
+
+			Timer_2 = map_->GetTimer_2();
+			printf("百の位:%d", Timer_2 / 100);
+			eachNumber_2[0] = Timer_2 / 100;
+			Timer_2 = Timer_2 % 100;
+
+			printf("十の位:%d", Timer_2 / 10);
+			eachNumber_2[1] = Timer_2 / 10;
+			Timer_2 = Timer_2 % 10;
+
+			printf("一の位:%d", Timer_2);
+			eachNumber_2[2] = Timer_2;
+
+			for (int j = 0; j < 3; j++)
+			{
+				DrawGraph(1350 + 16 * j, 60, graphHandle_2[eachNumber_2[j]], true);
+			}
+
 			// 関数飛び出し
 			map_->Draw(block, goal);
 			player_->Draw();
-			if (map_->GetTimerFlag() == 4) {
+
+			/*if (map_->GetTimerFlag() == 4) {
 				DrawBox(0, 0, 1600, 900, GetColor(0, 255, 255), true);
 				DrawFormatString(700, 450, GetColor(255, 0, 0), "クリア");
 				DrawFormatString(700, 350, GetColor(255, 0, 0), "Timer_keep;%d ", map_->GetTimer_keep());
 				DrawFormatString(700, 400, GetColor(255, 0, 0), "Timer_keep2;%d ", map_->GetTimer_keep2());
-			}
+			}*/
 			break;
 
 		case Scene::Stage2GAME:
@@ -291,12 +388,12 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 			// 関数飛び出し
 			map_->Draw(block, goal);
 			player_->Draw();
-			if (map_->GetTimerFlag() == 4) {
+			/*if (map_->GetTimerFlag() == 4) {
 				DrawBox(0, 0, 1600, 900, GetColor(0, 255, 255), true);
 				DrawFormatString(700, 450, GetColor(255, 0, 0), "クリア");
 				DrawFormatString(700, 350, GetColor(255, 0, 0), "Timer_keep;%d ", map_->GetTimer_keep());
 				DrawFormatString(700, 400, GetColor(255, 0, 0), "Timer_keep2;%d ", map_->GetTimer_keep2());
-			}
+			}*/
 			break;
 
 		case Scene::Stage3GAME:
@@ -320,12 +417,12 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 			// 関数飛び出し
 			map_->Draw(block, goal);
 			player_->Draw();
-			if (map_->GetTimerFlag() == 4) {
+			/*if (map_->GetTimerFlag() == 4) {
 				DrawBox(0, 0, 1600, 900, GetColor(0, 255, 255), true);
 				DrawFormatString(700, 450, GetColor(255, 0, 0), "クリア");
 				DrawFormatString(700, 350, GetColor(255, 0, 0), "Timer_keep;%d ", map_->GetTimer_keep());
 				DrawFormatString(700, 400, GetColor(255, 0, 0), "Timer_keep2;%d ", map_->GetTimer_keep2());
-			}
+			}*/
 			break;
 
 		case Scene::BADEND:
@@ -346,6 +443,25 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 			DrawFormatString(700, 350, GetColor(255, 0, 0), "Timer_keep;%d ", map_->GetTimer_keep());
 			DrawFormatString(700, 400, GetColor(255, 0, 0), "Timer_keep2;%d ", map_->GetTimer_keep2());
 			DrawFormatString(0, 200, GetColor(255, 0, 0), "scene;%d ", scene);
+			break;
+		case Scene::CLEAR:
+
+
+			BlinkingTimer++;
+
+			DrawBox(0, 0, 1600, 900, GetColor(0, 0, 255), true);
+			DrawGraph(0, 0, Clear_start01, true);
+			if (BlinkingTimer <= 30)
+			{
+				DrawGraph(0, 0, Clear_start02, true);
+
+			}
+			if (BlinkingTimer >= 60)
+			{
+				BlinkingTimer = 0;
+			}
+
+			DrawGraph(0, 0, Clear, true);
 			break;
 		}
 

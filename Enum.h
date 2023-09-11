@@ -14,7 +14,8 @@ enum class Scene {
 	Stage3GAME2,
 
 	END,			// エンド
-	BADEND			// ゲームオーバー
+	BADEND,// ゲームオーバー
+	CLEAR //クリア
 };
 
 //map名をenumで規定
