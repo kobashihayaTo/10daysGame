@@ -54,8 +54,12 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	int goal = LoadGraph("Resources/E.png");//マップチップの1に表示される
 	int graphHandle[10] = {};
 	int graphHandle_2[10] = {};
+	int graphHandle_[10] = {};
+
 	int Number = LoadDivGraph("Resources/digits.png",10,10,1,16,29, graphHandle);//番号の表示
 	int Number_2 = LoadDivGraph("Resources/digits.png", 10, 10, 1, 16, 29, graphHandle_2);//番号の表示
+
+	int Number_ = LoadDivGraph("Resources/digits_2.png", 10, 10, 1, 64, 116, graphHandle_);//番号の表示
 
 
 	// ゲームループで使う変数の宣言
@@ -78,6 +82,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 	int eachNumber[10] = {};
 	int eachNumber_2[10] = {};
+	int eachNumber_[10] = {};
 
 	int Timer = 000000;
 	int Timer_2 = 000000;
@@ -113,7 +118,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 			if (IntervalTimer >= 30) {
 				if (keys[KEY_INPUT_SPACE] == 1) {
-					scene = Scene::CLEAR;
+					scene = Scene::MANUAL;
 					IntervalTimer = 0;
 					BlinkingTimer = 0;
 				}
@@ -259,6 +264,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 			BlinkingTimer++;
 
 			DrawBox(0, 0, 1600, 900, GetColor(255, 0, 0), true);
+
 			DrawGraph(0, 0, Title_start01, true);
 			if (BlinkingTimer <= 30)
 			{
@@ -311,8 +317,23 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 			if (map_->GetTimerFlag() == 1) {
 				DrawBox(0, 0, 1600, 900, GetColor(0, 255, 255), true);
-				DrawFormatString(700, 450, GetColor(255, 0, 0), "SPACEでへんかするで");
-				DrawFormatString(700, 400, GetColor(255, 0, 0), "Timer_keep;%d ", map_->GetTimer_keep());
+				//DrawFormatString(650, 400, GetColor(255, 0, 0), "SPACEでへんかするで");
+				Timer = map_->GetTimer_();
+				printf("百の位:%d", Timer / 100);
+				eachNumber_[0] = Timer / 100;
+				Timer = Timer % 100;
+				printf("十の位:%d", Timer / 10);
+				eachNumber_[1] = Timer / 10;
+				Timer = Timer % 10;
+				printf("一の位:%d", Timer);
+				eachNumber_[2] = Timer;
+
+				// 関数飛び出し
+				for (int i = 0; i < 3; i++)
+				{
+					DrawGraph(700 + 64 * i, 200, graphHandle_[eachNumber_[i]], true);
+				}
+
 			}
 			break;
 
@@ -376,8 +397,22 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 			player_->Draw();
 			if (map_->GetTimerFlag() == 1) {
 				DrawBox(0, 0, 1600, 900, GetColor(0, 255, 255), true);
-				DrawFormatString(700, 450, GetColor(255, 0, 0), "SPACEでへんかするで");
-				DrawFormatString(700, 400, GetColor(255, 0, 0), "Timer_keep;%d ", map_->GetTimer_keep());
+				//DrawFormatString(650, 400, GetColor(255, 0, 0), "SPACEでへんかするで");
+				Timer = map_->GetTimer_();
+				printf("百の位:%d", Timer / 100);
+				eachNumber_[0] = Timer / 100;
+				Timer = Timer % 100;
+				printf("十の位:%d", Timer / 10);
+				eachNumber_[1] = Timer / 10;
+				Timer = Timer % 10;
+				printf("一の位:%d", Timer);
+				eachNumber_[2] = Timer;
+
+				// 関数飛び出し
+				for (int i = 0; i < 3; i++)
+				{
+					DrawGraph(700 + 64 * i, 200, graphHandle_[eachNumber_[i]], true);
+				}
 			}
 			break;
 
@@ -405,8 +440,22 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 			player_->Draw();
 			if (map_->GetTimerFlag() == 1) {
 				DrawBox(0, 0, 1600, 900, GetColor(0, 255, 255), true);
-				DrawFormatString(700, 450, GetColor(255, 0, 0), "SPACEでへんかするで");
-				DrawFormatString(700, 400, GetColor(255, 0, 0), "Timer_keep;%d ", map_->GetTimer_keep());
+				//DrawFormatString(650, 400, GetColor(255, 0, 0), "SPACEでへんかするで");
+				Timer = map_->GetTimer_();
+				printf("百の位:%d", Timer / 100);
+				eachNumber_[0] = Timer / 100;
+				Timer = Timer % 100;
+				printf("十の位:%d", Timer / 10);
+				eachNumber_[1] = Timer / 10;
+				Timer = Timer % 10;
+				printf("一の位:%d", Timer);
+				eachNumber_[2] = Timer;
+
+				// 関数飛び出し
+				for (int i = 0; i < 3; i++)
+				{
+					DrawGraph(700 + 64 * i, 200, graphHandle_[eachNumber_[i]], true);
+				}
 			}
 			break;
 
