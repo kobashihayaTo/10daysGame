@@ -230,9 +230,14 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 				StopSoundMem(Stage);//ストップ
 				scene = Scene::END;
 			}
-
 			if (map_->GetTimerFlag() == 1) {
+				StopSoundMem(Stage);//ストップ
+				if (CheckSoundMem(Result) == 0) {
+					PlaySoundMem(Result, DX_PLAYTYPE_LOOP, true);
+					ChangeVolumeSoundMem(128, Result);
+				}
 				if (keys[KEY_INPUT_SPACE] == 1) {
+					StopSoundMem(Result);//ストップ
 					StopSoundMem(Stage);//ストップ
 					scene = Scene::Stage1GAME2;
 					player_->Initialize();
@@ -270,8 +275,13 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 				scene = Scene::END;
 			}
 			if (map_->GetTimerFlag() == 1) {
+				StopSoundMem(Stage);//ストップ
+				if (CheckSoundMem(Result) == 0) {
+					PlaySoundMem(Result, DX_PLAYTYPE_LOOP, true);
+					ChangeVolumeSoundMem(128, Result);
+				}
 				if (keys[KEY_INPUT_SPACE] == 1) {
-					StopSoundMem(Stage);//ストップ
+					StopSoundMem(Result);//ストップ
 					scene = Scene::Stage2GAME2;
 					player_->Initialize();
 					map_->SetTimerFlag(2);
@@ -309,8 +319,13 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 				scene = Scene::END;
 			}
 			if (map_->GetTimerFlag() == 1) {
+				StopSoundMem(Stage);//ストップ
+				if (CheckSoundMem(Result) == 0) {
+					PlaySoundMem(Result, DX_PLAYTYPE_LOOP, true);
+					ChangeVolumeSoundMem(128, Result);
+				}
 				if (keys[KEY_INPUT_SPACE] == 1) {
-					StopSoundMem(Stage);//ストップ
+					StopSoundMem(Result);//ストップ
 					scene = Scene::Stage3GAME2;
 					player_->Initialize();
 					map_->SetTimerFlag(2);
