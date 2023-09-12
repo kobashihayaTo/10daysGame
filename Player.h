@@ -38,7 +38,6 @@ public:
 	void SetJumpFlag(int JumpFlag_) { JumpFlag = JumpFlag_; }
 
 private:
-
 	// ƒvƒŒƒCƒ„[ -----------
 	float PlayerTransX = 100;
 	float PlayerTransY = 800;

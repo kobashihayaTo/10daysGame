@@ -49,7 +49,7 @@ void Map::Update(Player* player)
 
 	for (int Y = 0; Y < DrawMapChipNumY; Y++) {
 		for (int X = 0; X < DrawMapChipNumX; X++) {
-			/*　プレイヤーと BLOCK の当たり判定　*/
+			/* プレイヤーと BLOCK の当たり判定 */
 			if (MapData[MapNo].Data[Y][X] == NONE) {
 				if (MapData[MapNo].Data[rightBottomY][rightBottomX] == NONE && MapData[MapNo].Data[leftBottomY][leftBottomX] == NONE) {
 					JumpFlag = 1;
@@ -133,7 +133,7 @@ void Map::Update(Player* player)
 				// プレイヤーが上から当たったとき
 				rightBottomY = (PlayerTransY + 1 + PlayerRadius) / BLOCK_SIZE;
 				leftBottomY = (PlayerTransY + 1 + PlayerRadius) / BLOCK_SIZE;
-				/*　ジャンプ後の着地　*/
+				/* ジャンプ後の着地 */
 				// 左端が BLOCK に当たったとき
 				if (MapData[MapNo].Data[leftBottomY][leftBottomX] == BLOCK) {
 					// 両端が当たったとき
@@ -206,8 +206,8 @@ void Map::Update(Player* player)
 				}
 			}
 
-			/*　DUMMY の当たり判定　*/
-			/*　WALL の当たり判定　*/
+			/* DUMMY の当たり判定 */
+			/* WALL の当たり判定 */
 			// 右
 			rightTopX = (PlayerTransX + 1 + PlayerRadius) / BLOCK_SIZE;
 			rightBottomX = (PlayerTransX + 1 + PlayerRadius) / BLOCK_SIZE;
@@ -232,7 +232,7 @@ void Map::Update(Player* player)
 				player->SetPlayerTransX(PlayerTransX);
 			}
 
-			/*　ゴール用当たり判定　*/
+			/* ゴール用当たり判定 */
 			if (MapData[MapNo].Data[leftTopY][leftTopX] == GOAL && MapData[MapNo].Data[rightTopY][rightTopX] == GOAL ||
 				MapData[MapNo].Data[rightBottomY][rightBottomX] == GOAL && MapData[MapNo].Data[leftBottomY][leftBottomX] == GOAL ||
 				MapData[MapNo].Data[rightTopY][rightTopX] == GOAL && MapData[MapNo].Data[rightBottomY][rightBottomX] == GOAL ||
@@ -281,15 +281,6 @@ void Map::Draw(int block, int goal)
 			}
 		}
 	}
-
-	//DrawFormatString(0, 60, GetColor(255, 0, 0), "TimerFlag;%d ", TimerFlag);
-	//DrawFormatString(0, 80, GetColor(255, 0, 0), "Timer_GAME;%d ", Timer_GAME);
-	//DrawFormatString(0, 100, GetColor(255, 0, 0), "Timer_GAME2;%d ", Timer_GAME2);
-	//DrawFormatString(0, 120, GetColor(255, 0, 0), "Timer_keep;%d ", Timer_keep);
-	//DrawFormatString(0, 140, GetColor(255, 0, 0), "Timer_keep2;%d ", Timer_keep2);
-	//DrawFormatString(0, 160, GetColor(255, 0, 0), "Timer;%d ", Timer);
-	//DrawFormatString(0, 180, GetColor(255, 0, 0), "Timer_2;%d ", Timer_2);
-	//DrawFormatString(0, 220, GetColor(255, 0, 0), "Hit;%d ", isHit);
 }
 
 void Map::AllReset()

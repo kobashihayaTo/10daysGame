@@ -39,7 +39,7 @@ public:
 	/// </summary>
 	/// <param name="block"></param>
 	/// <param name="goal"></param>
-	void Draw(int block, int goal);//ここでmainブロック画像をもってきてる
+	void Draw(int block, int goal); // ここでmainブロック画像をもってきてる
 
 	void AllReset();
 	void Reset();
@@ -157,7 +157,7 @@ public:
 
 	};
 
-	//ゲッター、セッター置き場
+	// ゲッター、セッター置き場
 	int GetTimerFlag() { return TimerFlag; }
 	void SetTimerFlag(int TimerFlag_) { TimerFlag = TimerFlag_; }
 

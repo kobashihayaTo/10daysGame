@@ -18,7 +18,7 @@ public:
 	/// </summary>
 	/// <param name="block"></param>
 	/// <param name="goal"></param>
-	void Draw(int Number, int x, int y, int sprite_X, int sprite_Y, int spritew, int spriteh);//ここでmainブロック画像をもってきてる
+	void Draw(int Number, int x, int y, int sprite_X, int sprite_Y, int spritew, int spriteh); // ここでmainブロック画像をもってきてる
 
 	void renderNumber(int Number, int num, int x, int y);
 };
