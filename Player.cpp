@@ -25,8 +25,8 @@ void Player::Draw()
 	DrawBox((int)(PlayerTransX + Playerradius), (int)(PlayerTransY + Playerradius), (int)(PlayerTransX - Playerradius), (int)(PlayerTransY - Playerradius)
 		, GetColor(255, 255, 255), true);
 
-	DrawFormatString(0, 40, GetColor(255, 0, 0), "PlayerTransX;%f PlayerTransY;%f", PlayerTransX, PlayerTransY);
-	DrawFormatString(500, 40, GetColor(255, 0, 0), "PlayerMove:%f", move);
+	/*DrawFormatString(0, 40, GetColor(255, 0, 0), "PlayerTransX;%f PlayerTransY;%f", PlayerTransX, PlayerTransY);
+	DrawFormatString(500, 40, GetColor(255, 0, 0), "PlayerMove:%f", move);*/
 }
 
 void Player::Jamp(char* keys, char* oldkeys)
