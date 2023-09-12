@@ -450,8 +450,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 		case Scene::Stage1GAME:
 			DrawGraph(0, 0, BackGround_1, true);
-			//DrawFormatString(0, 200, GetColor(255, 0, 0), "scene;%d ", scene);
-
+			
 			//ƒ^ƒCƒ}[‚Ì•`‰æ
 			Timer = map_->GetTimer_();
 
@@ -476,8 +475,10 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 			}
 
 			if (map_->GetTimerFlag() == 1) {
+				Timer = map_->GetTimer_();
 				DrawBox(0, 0, 1600, 900, GetColor(0, 255, 255), true);
 				DrawGraph(0, 0, ClearTime, true);
+
 				printf("•S‚ÌˆÊ:%d", Timer / 100);
 				eachNumber_[0] = Timer / 100;
 				Timer = Timer % 100;
@@ -566,6 +567,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 			}
 
 			if (map_->GetTimerFlag() == 1) {
+				Timer = map_->GetTimer_();
 				DrawBox(0, 0, 1600, 900, GetColor(0, 255, 255), true);
 				DrawGraph(0, 0, ClearTime, true);
 				Timer = map_->GetTimer_();
@@ -660,6 +662,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 			}
 
 			if (map_->GetTimerFlag() == 1) {
+				Timer = map_->GetTimer_();
 				DrawBox(0, 0, 1600, 900, GetColor(0, 255, 255), true);
 				DrawGraph(0, 0, ClearTime, true);
 				Timer = map_->GetTimer_();
