@@ -282,14 +282,14 @@ void Map::Draw(int block, int goal)
 		}
 	}
 
-	DrawFormatString(0, 60, GetColor(255, 0, 0), "TimerFlag;%d ", TimerFlag);
-	DrawFormatString(0, 80, GetColor(255, 0, 0), "Timer_GAME;%d ", Timer_GAME);
-	DrawFormatString(0, 100, GetColor(255, 0, 0), "Timer_GAME2;%d ", Timer_GAME2);
-	DrawFormatString(0, 120, GetColor(255, 0, 0), "Timer_keep;%d ", Timer_keep);
-	DrawFormatString(0, 140, GetColor(255, 0, 0), "Timer_keep2;%d ", Timer_keep2);
-	DrawFormatString(0, 160, GetColor(255, 0, 0), "Timer;%d ", Timer);
-	DrawFormatString(0, 180, GetColor(255, 0, 0), "Timer_2;%d ", Timer_2);
-	DrawFormatString(0, 220, GetColor(255, 0, 0), "Hit;%d ", isHit);
+	//DrawFormatString(0, 60, GetColor(255, 0, 0), "TimerFlag;%d ", TimerFlag);
+	//DrawFormatString(0, 80, GetColor(255, 0, 0), "Timer_GAME;%d ", Timer_GAME);
+	//DrawFormatString(0, 100, GetColor(255, 0, 0), "Timer_GAME2;%d ", Timer_GAME2);
+	//DrawFormatString(0, 120, GetColor(255, 0, 0), "Timer_keep;%d ", Timer_keep);
+	//DrawFormatString(0, 140, GetColor(255, 0, 0), "Timer_keep2;%d ", Timer_keep2);
+	//DrawFormatString(0, 160, GetColor(255, 0, 0), "Timer;%d ", Timer);
+	//DrawFormatString(0, 180, GetColor(255, 0, 0), "Timer_2;%d ", Timer_2);
+	//DrawFormatString(0, 220, GetColor(255, 0, 0), "Hit;%d ", isHit);
 }
 
 void Map::AllReset()

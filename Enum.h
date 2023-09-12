@@ -2,7 +2,9 @@
 
 enum class Scene {
 	TITLE,			// タイトル
+
 	MANUAL,			// マニュアル
+	SELECT,			//ステージセレクト
 	// 1ステージ
 	Stage1GAME,		// ゲームシーン
 	Stage1GAME2,	// ゲームシーン2

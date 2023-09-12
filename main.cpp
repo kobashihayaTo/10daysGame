@@ -49,10 +49,24 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	int Clear = LoadGraph("Resources/clear.png");
 	int Clear_start01 = LoadGraph("Resources/clear_title01.png");
 	int Clear_start02 = LoadGraph("Resources/clear_title02.png");
-
-	int block = LoadGraph("Resources/map.png");//マップチップの1に表示される
+	//マニュアル
+	int Manual_1 = LoadGraph("Resources/menu01.png");
+	int Manual_2 = LoadGraph("Resources/menu02.png");
+	//ステージの後ろ
+	int BackGround_1 = LoadGraph("Resources/background.png");
+	int BackGround_2 = LoadGraph("Resources/background2.png");
+	//ステージの1回目と2回目の間に使うもの
+	int ClearTime= LoadGraph("Resources/cleartime.png");
+	int ClearTime_2 = LoadGraph("Resources/cleartime02.png");
+	//マップ
+	int block = LoadGraph("Resources/Block01.png");//マップチップの1に表示される
 	int goal = LoadGraph("Resources/E.png");//マップチップの1に表示される
-
+	//ステージ切り替え
+	int StageSelect = LoadGraph("Resources/stage_select.png");
+	int StageSelect_1 = LoadGraph("Resources/stage_select01.png");
+	int StageSelect_2 = LoadGraph("Resources/stage_select02.png");
+	int StageSelect_3 = LoadGraph("Resources/stage_select03.png");
+	//数字配列
 	int graphHandle[10] = {};
 	int graphHandle_2[10] = {};
 	int graphHandleResult_[10] = {};
@@ -64,9 +78,11 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	int NumberResult_ = LoadDivGraph("Resources/digits_2.png", 10, 10, 1, 64, 116, graphHandleResult_);//番号の表示
 	//BGM
 	int TitleBGM;
-	int Manual;
-	TitleBGM = LoadSoundMem("Sound/gameclear.mp3");
-	Manual = LoadSoundMem("Sound/titleBGM.mp3");
+	int Stage;
+	int Result;
+	TitleBGM = LoadSoundMem("Sound/title.mp3");
+	Stage = LoadSoundMem("Sound/stage.mp3");
+	Result = LoadSoundMem("Sound/result.mp3");
 	// ゲームループで使う変数の宣言
 	// タイトル
 	Scene scene = Scene::TITLE;
@@ -91,6 +107,9 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 	int Timer = 000000;
 	int Timer_2 = 000000;
+
+	int ManualFlag = 0;
+	int StageSelectFlag = 0;
 
 	// 最新のキーボード情報用
 	char keys[256] = { 0 };
@@ -135,45 +154,86 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 			break;
 
 		case Scene::MANUAL:
-			if (CheckSoundMem(Manual) == 0) {
-				PlaySoundMem(Manual, DX_PLAYTYPE_LOOP, true);
-				ChangeVolumeSoundMem(128, Manual);
+			IntervalTimer++;
+			if (IntervalTimer >= 30) {
+				if (keys[KEY_INPUT_SPACE] == 1)
+				{
+					ManualFlag++;
+					IntervalTimer = 0;
+				}
+
+				if (ManualFlag == 2)
+				{
+					IntervalTimer = 0;
+					ManualFlag = 0;
+					scene = Scene::SELECT;
+				}
 			}
-			if (keys[KEY_INPUT_A] == 1) {
-				StopSoundMem(Manual);//ストップ
-				map_->SetMapNo(0);
-				scene = Scene::Stage1GAME;
+
+			break;
+		case Scene::SELECT:
+			if (keys[KEY_INPUT_LEFT] == 1 && oldkeys[KEY_INPUT_LEFT] == 0)
+			{
+				StageSelectFlag--;
 			}
-			if (keys[KEY_INPUT_S] == 1) {
-				StopSoundMem(Manual);//ストップ
-				map_->SetMapNo(1);
-				scene = Scene::Stage2GAME;
+			if (keys[KEY_INPUT_RIGHT] == 1 && oldkeys[KEY_INPUT_RIGHT] == 0)
+			{
+				StageSelectFlag++;
 			}
-			if (keys[KEY_INPUT_D] == 1) {
-				StopSoundMem(Manual);//ストップ
-				map_->SetMapNo(2);
-				scene = Scene::Stage3GAME;
+
+			if (StageSelectFlag < 0)
+			{
+				StageSelectFlag = 0;
+			}
+			if (StageSelectFlag > 2)
+			{
+				StageSelectFlag = 2;
+			}
+
+			IntervalTimer++;
+			if (IntervalTimer >= 30) {
+				if (StageSelectFlag == 0) {
+					if (keys[KEY_INPUT_SPACE] == 1) {
+
+						map_->SetMapNo(0);
+						scene = Scene::Stage1GAME;
+					}
+				}
+				if (StageSelectFlag == 1) {
+					if (keys[KEY_INPUT_SPACE] == 1) {
+
+						map_->SetMapNo(1);
+						scene = Scene::Stage2GAME;
+					}
+				}
+				if (StageSelectFlag == 2) {
+					if (keys[KEY_INPUT_SPACE] == 1) {
+
+						map_->SetMapNo(2);
+						scene = Scene::Stage3GAME;
+					}
+				}
 			}
 			break;
 
 		case Scene::Stage1GAME:
 
-			if (CheckSoundMem(TitleBGM) == 0) {
-				PlaySoundMem(TitleBGM, DX_PLAYTYPE_LOOP, true);
-				ChangeVolumeSoundMem(128, TitleBGM);
+			if (CheckSoundMem(Stage) == 0) {
+				PlaySoundMem(Stage, DX_PLAYTYPE_LOOP, true);
+				ChangeVolumeSoundMem(128, Stage);
 			}
 
 			player_->Update(keys, oldkeys);
 			map_->Update(player_);
 
 			if (map_->GetTimer_() >= 5000) {
-				StopSoundMem(TitleBGM);//ストップ
+				StopSoundMem(Stage);//ストップ
 				scene = Scene::END;
 			}
 
 			if (map_->GetTimerFlag() == 1) {
 				if (keys[KEY_INPUT_SPACE] == 1) {
-					StopSoundMem(TitleBGM);//ストップ
+					StopSoundMem(Stage);//ストップ
 					scene = Scene::Stage1GAME2;
 					player_->Initialize();
 					map_->SetTimerFlag(2);
@@ -182,36 +242,36 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 			break;
 
 		case Scene::Stage1GAME2:
-			if (CheckSoundMem(TitleBGM) == 0) {
-				PlaySoundMem(TitleBGM, DX_PLAYTYPE_LOOP, true);
-				ChangeVolumeSoundMem(128, TitleBGM);
+			if (CheckSoundMem(Stage) == 0) {
+				PlaySoundMem(Stage, DX_PLAYTYPE_LOOP, true);
+				ChangeVolumeSoundMem(128, Stage);
 			}
 			player_->Update(keys, oldkeys);
 			map_->Update(player_);
 			if (map_->GetTimerFlag() == 4) {
-				StopSoundMem(TitleBGM);//ストップ
+				StopSoundMem(Stage);//ストップ
 				scene = Scene::CLEAR;
 			}
 			if (map_->GetTimerFlag() == 5) {
-				StopSoundMem(TitleBGM);//ストップ
+				StopSoundMem(Stage);//ストップ
 				scene = Scene::BADEND;
 			}
 			break;
 
 		case Scene::Stage2GAME:
-			if (CheckSoundMem(TitleBGM) == 0) {
-				PlaySoundMem(TitleBGM, DX_PLAYTYPE_LOOP, true);
-				ChangeVolumeSoundMem(128, TitleBGM);
+			if (CheckSoundMem(Stage) == 0) {
+				PlaySoundMem(Stage, DX_PLAYTYPE_LOOP, true);
+				ChangeVolumeSoundMem(128, Stage);
 			}
 			player_->Update(keys, oldkeys);
 			map_->Update(player_);
 			if (map_->GetTimer_() >= 5000) {
-				StopSoundMem(TitleBGM);//ストップ
+				StopSoundMem(Stage);//ストップ
 				scene = Scene::END;
 			}
 			if (map_->GetTimerFlag() == 1) {
 				if (keys[KEY_INPUT_SPACE] == 1) {
-					StopSoundMem(TitleBGM);//ストップ
+					StopSoundMem(Stage);//ストップ
 					scene = Scene::Stage2GAME2;
 					player_->Initialize();
 					map_->SetTimerFlag(2);
@@ -221,26 +281,26 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 		case Scene::Stage2GAME2:
 
-			if (CheckSoundMem(TitleBGM) == 0) {
-				PlaySoundMem(TitleBGM, DX_PLAYTYPE_LOOP, true);
-				ChangeVolumeSoundMem(128, TitleBGM);
+			if (CheckSoundMem(Stage) == 0) {
+				PlaySoundMem(Stage, DX_PLAYTYPE_LOOP, true);
+				ChangeVolumeSoundMem(128, Stage);
 			}
 			player_->Update(keys, oldkeys);
 			map_->Update(player_);
 			if (map_->GetTimerFlag() == 4) {
-				StopSoundMem(TitleBGM);//ストップ
+				StopSoundMem(Stage);//ストップ
 				scene = Scene::CLEAR;
 			}
 			if (map_->GetTimerFlag() == 5) {
-				StopSoundMem(TitleBGM);//ストップ
+				StopSoundMem(Stage);//ストップ
 				scene = Scene::BADEND;
 			}
 			break;
 
 		case Scene::Stage3GAME:
-			if (CheckSoundMem(TitleBGM) == 0) {
-				PlaySoundMem(TitleBGM, DX_PLAYTYPE_LOOP, true);
-				ChangeVolumeSoundMem(128, TitleBGM);
+			if (CheckSoundMem(Stage) == 0) {
+				PlaySoundMem(Stage, DX_PLAYTYPE_LOOP, true);
+				ChangeVolumeSoundMem(128, Stage);
 			}
 			player_->Update(keys, oldkeys);
 			map_->Update(player_);
@@ -250,7 +310,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 			}
 			if (map_->GetTimerFlag() == 1) {
 				if (keys[KEY_INPUT_SPACE] == 1) {
-					StopSoundMem(TitleBGM);//ストップ
+					StopSoundMem(Stage);//ストップ
 					scene = Scene::Stage3GAME2;
 					player_->Initialize();
 					map_->SetTimerFlag(2);
@@ -260,36 +320,36 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 		case Scene::Stage3GAME2:
 
-			if (CheckSoundMem(TitleBGM) == 0) {
-				PlaySoundMem(TitleBGM, DX_PLAYTYPE_LOOP, true);
-				ChangeVolumeSoundMem(128, TitleBGM);
+			if (CheckSoundMem(Stage) == 0) {
+				PlaySoundMem(Stage, DX_PLAYTYPE_LOOP, true);
+				ChangeVolumeSoundMem(128, Stage);
 			}
 
 			player_->Update(keys, oldkeys);
 			map_->Update(player_);
 			if (map_->GetTimerFlag() == 4) {
 
-				StopSoundMem(TitleBGM);//ストップ
+				StopSoundMem(Stage);//ストップ
 
 				scene = Scene::CLEAR;
 			}
 			if (map_->GetTimerFlag() == 5) {
 
-				StopSoundMem(TitleBGM);//ストップ
+				StopSoundMem(Stage);//ストップ
 
 				scene = Scene::BADEND;
 			}
 			break;
 
 		case Scene::BADEND:
-			if (CheckSoundMem(TitleBGM) == 0) {
-				PlaySoundMem(TitleBGM, DX_PLAYTYPE_LOOP, true);
-				ChangeVolumeSoundMem(128, TitleBGM);
+			if (CheckSoundMem(Result) == 0) {
+				PlaySoundMem(Result, DX_PLAYTYPE_LOOP, true);
+				ChangeVolumeSoundMem(128, Result);
 			}
 			if (map_->GetTimerFlag() == 5) {
 				if (keys[KEY_INPUT_SPACE] == 1) {
 
-					StopSoundMem(TitleBGM);//ストップ
+					StopSoundMem(Result);//ストップ
 
 					scene = Scene::Stage1GAME2;
 					player_->Initialize();
@@ -299,13 +359,13 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 			break;
 
 		case Scene::END:
-			if (CheckSoundMem(TitleBGM) == 0) {
-				PlaySoundMem(TitleBGM, DX_PLAYTYPE_LOOP, true);
-				ChangeVolumeSoundMem(128, TitleBGM);
+			if (CheckSoundMem(Result) == 0) {
+				PlaySoundMem(Result, DX_PLAYTYPE_LOOP, true);
+				ChangeVolumeSoundMem(128, Result);
 			}
 			if (keys[KEY_INPUT_SPACE] == 1) {
 
-				StopSoundMem(TitleBGM);//ストップ
+				StopSoundMem(Result);//ストップ
 
 				scene = Scene::Stage1GAME;
 				player_->Initialize();
@@ -313,13 +373,13 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 			}
 			break;
 		case Scene::CLEAR:
-			if (CheckSoundMem(TitleBGM) == 0) {
-				PlaySoundMem(TitleBGM, DX_PLAYTYPE_LOOP, true);
-				ChangeVolumeSoundMem(128, TitleBGM);
+			if (CheckSoundMem(Result) == 0) {
+				PlaySoundMem(Result, DX_PLAYTYPE_LOOP, true);
+				ChangeVolumeSoundMem(128, Result);
 			}
-			if (keys[KEY_INPUT_A] == 1) {
+			if (keys[KEY_INPUT_SPACE] == 1) {
 
-				StopSoundMem(TitleBGM);//ストップ
+				StopSoundMem(Result);//ストップ
 
 				scene = Scene::TITLE;
 			}
@@ -332,36 +392,50 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		case Scene::TITLE:
 
 			BlinkingTimer++;
-
-			DrawBox(0, 0, 1600, 900, GetColor(255, 0, 0), true);
-
-			DrawGraph(0, 0, Title_start01, true);
+			DrawGraph(0, 0, Title, true);
 			if (BlinkingTimer <= 30)
 			{
-				DrawGraph(0, 0, Title_start02, true);
-
+				//DrawGraph(0, 0, Title_start02, true);
+				DrawGraph(0, 0, Title_start01, true);
 			}
 			if (BlinkingTimer >= 60)
 			{
 				BlinkingTimer = 0;
 			}
-
-			DrawGraph(0, 0, Title, true);
-
-
 			break;
 
 		case Scene::MANUAL:
+			if (ManualFlag == 0)
+			{
+				DrawGraph(0, 0, Manual_1, false);
+			}
+			if (ManualFlag == 1)
+			{
+				DrawGraph(0, 0, Manual_2, true);
+			}
+			break;
 
-			DrawBox(0, 0, 1600, 900, GetColor(255, 255, 0), true);
-			DrawFormatString(700, 350, GetColor(255, 0, 0), "A押したらステージ１ ");
-			DrawFormatString(700, 400, GetColor(255, 0, 0), "S押したらステージ２ ");
-			DrawFormatString(700, 450, GetColor(255, 0, 0), "D押したらステージ３ ");
+		case Scene::SELECT:
+
+			DrawGraph(0, 0, StageSelect, true);
+
+			if (StageSelectFlag == 0)
+			{
+				DrawGraph(0, 0, StageSelect_1, true);
+			}
+			if (StageSelectFlag == 1)
+			{
+				DrawGraph(0, 0, StageSelect_2, true);
+			}
+			if (StageSelectFlag == 2)
+			{
+				DrawGraph(0, 0, StageSelect_3, true);
+			}
 			break;
 
 		case Scene::Stage1GAME:
-
-			DrawFormatString(0, 200, GetColor(255, 0, 0), "scene;%d ", scene);
+			DrawGraph(0, 0, BackGround_1, true);
+			//DrawFormatString(0, 200, GetColor(255, 0, 0), "scene;%d ", scene);
 
 			//タイマーの描画
 			Timer = map_->GetTimer_();
@@ -388,7 +462,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 			if (map_->GetTimerFlag() == 1) {
 				DrawBox(0, 0, 1600, 900, GetColor(0, 255, 255), true);
-				Timer = map_->GetTimer_();
+				DrawGraph(0, 0, ClearTime, true);
 				printf("百の位:%d", Timer / 100);
 				eachNumber_[0] = Timer / 100;
 				Timer = Timer % 100;
@@ -408,7 +482,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 			break;
 
 		case Scene::Stage1GAME2:
-			DrawFormatString(0, 200, GetColor(255, 0, 0), "scene;%d ", scene);
+			DrawGraph(0, 0, BackGround_2, true);
+			//DrawFormatString(0, 200, GetColor(255, 0, 0), "scene;%d ", scene);
 
 			Timer = map_->GetTimer_();
 			printf("百の位:%d", Timer / 100);
@@ -452,13 +527,32 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 		case Scene::Stage2GAME:
 
-			DrawBox(0, 0, 1600, 900, GetColor(255, 255, 0), true);
-			DrawFormatString(0, 200, GetColor(255, 255, 255), "ステージ２");
-			// 関数飛び出し
+			DrawGraph(0, 0, BackGround_1, true);
+			//DrawFormatString(0, 200, GetColor(255, 255, 255), "ステージ２");
+			//タイマーの描画
+			Timer = map_->GetTimer_();
+
+			printf("百の位:%d", Timer / 100);
+			eachNumber[0] = Timer / 100;
+			Timer = Timer % 100;
+
+			printf("十の位:%d", Timer / 10);
+			eachNumber[1] = Timer / 10;
+			Timer = Timer % 10;
+
+			printf("一の位:%d", Timer);
+			eachNumber[2] = Timer;
+
 			map_->Draw(block, goal);
 			player_->Draw();
+			for (int i = 0; i < 3; i++)
+			{
+				DrawGraph(1450 + 16 * i, 60, graphHandle[eachNumber[i]], true);
+			}
+
 			if (map_->GetTimerFlag() == 1) {
 				DrawBox(0, 0, 1600, 900, GetColor(0, 255, 255), true);
+				DrawGraph(0, 0, ClearTime, true);
 				Timer = map_->GetTimer_();
 				printf("百の位:%d", Timer / 100);
 				eachNumber_[0] = Timer / 100;
@@ -479,8 +573,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 		case Scene::Stage2GAME2:
 
-			DrawBox(0, 0, 1600, 900, GetColor(255, 255, 0), true);
-			DrawFormatString(0, 200, GetColor(255, 255, 255), "ステージ２");
+			DrawGraph(0, 0, BackGround_2, true);
+			//DrawFormatString(0, 200, GetColor(255, 255, 255), "ステージ２");
 
 
 			Timer = map_->GetTimer_();
@@ -524,13 +618,35 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 		case Scene::Stage3GAME:
 
-			DrawBox(0, 0, 1600, 900, GetColor(255, 255, 0), true);
-			DrawFormatString(0, 200, GetColor(255, 255, 255), "ステージ3");
+			DrawGraph(0, 0, BackGround_1, true);
+			//DrawFormatString(0, 200, GetColor(255, 255, 255), "ステージ3");
 			// 関数飛び出し
+
+			//タイマーの描画
+			Timer = map_->GetTimer_();
+
+			printf("百の位:%d", Timer / 100);
+			eachNumber[0] = Timer / 100;
+			Timer = Timer % 100;
+
+			printf("十の位:%d", Timer / 10);
+			eachNumber[1] = Timer / 10;
+			Timer = Timer % 10;
+
+			printf("一の位:%d", Timer);
+			eachNumber[2] = Timer;
+
+
 			map_->Draw(block, goal);
 			player_->Draw();
+			for (int i = 0; i < 3; i++)
+			{
+				DrawGraph(1450 + 16 * i, 60, graphHandle[eachNumber[i]], true);
+			}
+
 			if (map_->GetTimerFlag() == 1) {
 				DrawBox(0, 0, 1600, 900, GetColor(0, 255, 255), true);
+				DrawGraph(0, 0, ClearTime, true);
 				Timer = map_->GetTimer_();
 				printf("百の位:%d", Timer / 100);
 				eachNumber_[0] = Timer / 100;
@@ -551,8 +667,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 		case Scene::Stage3GAME2:
 
-			DrawBox(0, 0, 1600, 900, GetColor(255, 255, 0), true);
-			DrawFormatString(0, 200, GetColor(255, 255, 255), "ステージ3");
+			DrawGraph(0, 0, BackGround_2, true);
+			//DrawFormatString(0, 200, GetColor(255, 255, 255), "ステージ3");
 
 
 			Timer = map_->GetTimer_();
@@ -598,7 +714,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 			if (map_->GetTimerFlag() == 5) {
 				DrawBox(0, 0, 1600, 900, GetColor(0, 255, 255), true);
-				DrawFormatString(700, 450, GetColor(255, 0, 0), "もう一回やってみよう");
+				DrawGraph(0, 0, ClearTime_2, true);
 
 				Timer = map_->GetTimer_();
 				printf("百の位:%d", Timer / 100);
@@ -645,24 +761,22 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 			DrawFormatString(700, 400, GetColor(255, 0, 0), "Timer_keep2;%d ", map_->GetTimer_keep2());
 			DrawFormatString(0, 200, GetColor(255, 0, 0), "scene;%d ", scene);
 			break;
+
 		case Scene::CLEAR:
-
-
 			BlinkingTimer++;
 
-			DrawBox(0, 0, 1600, 900, GetColor(0, 0, 255), true);
+			DrawGraph(0, 0, Clear, true);
 			DrawGraph(0, 0, Clear_start01, true);
 			if (BlinkingTimer <= 30)
 			{
 				DrawGraph(0, 0, Clear_start02, true);
-
 			}
 			if (BlinkingTimer >= 60)
 			{
 				BlinkingTimer = 0;
 			}
 
-			DrawGraph(0, 0, Clear, true);
+
 			break;
 		}
 
